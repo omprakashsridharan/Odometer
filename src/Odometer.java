@@ -1,25 +1,72 @@
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Odometer {
-    ArrayList<Integer> digits;
-    static BigInteger RANGE = new BigInteger("123456789");
+    int reading;
+    int max;
+    int min;
 
 
     public Odometer(int number) {
-        digits = toArray(number);
+        reading = number;
+        System.out.println("reading"+reading);
+        String maxString="";
+        String minString="";
+        for(int i=0;i<(reading+"").length();i++)
+        {
+            maxString = (9-i) + maxString;
+            minString= (i+1) + minString;
+        }
+        max = Integer.parseInt(maxString);
+        min = Integer.parseInt(minString);
     }
 
-    private ArrayList<Integer> toArray(int number) {
-        ArrayList<Integer> arrayList = new ArrayList();
-        while (number>0){
-            arrayList.add(number%10);
-            number /= 10;
+    private int prev(){
+        if(reading == min)
+            return max;
+        for(int i=reading-1;i>=min;i--){
+            System.out.println(i);
+            if(isValid(i)){
+                return i;
+            }
         }
-        Collections.reverse(arrayList);
-        return arrayList;
+        return max;
+    }
+
+    private int next(){
+        if(reading == max)
+            return min;
+        for(int i=reading+1;i<=max;i++)
+            if(isValid(i)){
+            return i;
+            }
+        return min;
+    }
+
+    private boolean isValid(int number){
+        char[] tmp = (number+"").toCharArray();
+        for(int i=0;i<tmp.length-1;i++){
+            if(tmp[i]>=tmp[i+1])
+                return false;
+        }
+        return true;
+    }
+
+    public int nextNthReading(int n){
+        for(int i=0;i<n;i++)
+            reading = next();
+        System.out.println(reading);
+        return reading;
+
+    }
+    public int prevNthReading(int n){
+        for(int i=0;i<n;i++)
+        {reading = prev();
+        System.out.println("----"+reading);}
+        return reading;
+
     }
 
 
